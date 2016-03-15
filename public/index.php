@@ -7,6 +7,9 @@
  */
 
 use Symfony\Component\HttpFoundation\Response;
+use Code\Sistema\Service\ClienteService;
+use Code\Sistema\Entity\Cliente;
+use Code\Sistema\Mapper\ClienteMapper;
 
 require_once __DIR__ . '/../bootstrap.php';
 
@@ -14,22 +17,23 @@ require_once __DIR__ . '/../bootstrap.php';
 // dados para teste da rota /cliente
 // metodologia adotada: KISS
 // ====================================
-$dados = array(['nome'=>'Mariana Silva', 'email'=>'mariana@jmail.com','cpfcnpj'=>'000.000.001.01'],
-    ['nome'=>'José Soares', 'email'=>'jsoares@haltmail.com','cpfcnpj'=>'000.000.002.02'],
-    ['nome'=>'Juliana Marques', 'email'=>'juliana.marques@empresa.com.br','cpfcnpj'=>'000.000.003.03'],
-    ['nome'=>'Casa Popular ME', 'email'=>'contato@casapopular.com.br','cpfcnpj'=>'00.000.001/0001-01'],
-);
+$dados = array('nome' => 'Mariana Silva', 'email' => 'mariana@jmail.com');
 // =====================================
 
 $response = new Response();
 
-$app->get('/', function() use ($app) {
+$app['clienteService'] = function () {
+
+    return new ClienteService(new Cliente(), new clienteMapper());
+};
+
+$app->get('/', function () use ($app) {
     return $app->redirect('/clientes');
 });
 
 $app->get('/clientes', function () use ($app, $response, $dados) {
 
-    return $app->json($dados);
+    return $app->json($app['clienteService']->insert($dados));
 });
 
 $app->run();
