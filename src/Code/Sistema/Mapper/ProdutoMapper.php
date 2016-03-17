@@ -19,4 +19,4 @@ class ProdutoMapper
             'nome' => $produto->getNome(), 'preco' => $produto->getPreco()
         );
     }
-}
+}g
