@@ -6,9 +6,13 @@ Este projeto é o resultado das entregas parciais do treinamento de desenvolvime
 Entregas de exercícios
 -----
 
-1. **Lista de clientes no formato Json** `Branch 1`
+1. **Lista de clientes no formato Json**
 
 Rota de acesso: `/clientes`
+
+2. **Lista de produtos contendo código, nome, descrição e preço**
+
+Rota de acesso: `/produtos`
 
 Forma de instalação:
 
