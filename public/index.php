@@ -45,7 +45,7 @@ $app['produtoService'] = function () {
 
 // home
 $app->get('/', function () use ($app) {
-    return $app->redirect('/produtos');
+    return $app['twig']->render('index.twig',[]);
 });
 
 // listar clientes
