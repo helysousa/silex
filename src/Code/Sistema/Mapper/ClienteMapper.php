@@ -19,15 +19,12 @@ class ClienteMapper
         );
     }
 
-    public function fetchAll()
+    public function fetchAll($app)
     {
-        $dados[0]['id'] = 0;
-    	$dados[0]['nome'] = 'Cliente XPTO';
-    	$dados[0]['email'] = 'clientexpto@gmail.com';
+        
+        $sql = 'select * from clientes';
 
-        $dados[1]['id'] = 1;
-    	$dados[1]['nome'] = 'Cliente Y';
-    	$dados[1]['email'] = 'clientey@gmail.com';
+        $dados = $app['db']->fetchAll($sql,[]);
 
     	return $dados;
     }
@@ -37,5 +34,13 @@ class ClienteMapper
         $clientes = $this->fetchAll();
 
         return $clientes[$id];
+    }
+    // retorna a quantidade de clientes cadastrados
+    public function count($app)
+    {
+        $sql = 'select count(*) as qtd from clientes';
+        $qtd = $app['db']->fetchAssoc($sql,[])['qtd'];
+
+        return $qtd;
     }
 }

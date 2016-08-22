@@ -43,10 +43,15 @@ namespace Code\Sistema\Service {
 
 
         // retorna todos os clientes
-        public function fetchAll() {
+        public function fetchAll($app) {
 
             return $this->clienteMapper->fetchAll();
 
+        }
+
+        public function count($app) 
+        {
+            return $this->clienteMapper->count($app);
         }
     }
 }

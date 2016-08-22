@@ -49,4 +49,9 @@ class ProdutoService
     {
         return $this->produtoMapper->fetchAll($app);
     }
+
+    public function count($app) 
+    {
+        return $this->produtoMapper->count($app);
+    }
 }

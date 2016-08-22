@@ -50,15 +50,8 @@ $app['produtoService'] = function () {
 // home
 $app->get('/', function () use ($app) {
 
-	$sql = 'select count(*) qtd from clientes';
-	$result = $app['db']->fetchAssoc($sql,[]);
-
-	$qtdClientes = $result['qtd'];
-
-	$sql = 'select count(*) qtd from produtos';
-	$result = $app['db']->fetchAssoc($sql,[]);
-
-	$qtdProdutos = $result['qtd'];
+	$qtdClientes = $app['clienteService']->count($app);
+	$qtdProdutos = $app['produtoService']->count($app);;
 
     return $app['twig']->render('index.twig',['qtdClientes' =>	$qtdClientes, 'qtdProdutos' => $qtdProdutos]);
 
@@ -72,7 +65,7 @@ $app->get('/', function () use ($app) {
 
 $app->get('/clientes', function () use ($app) {
 
-	$clientes = $app['clienteService']->fetchAll();
+	$clientes = $app['clienteService']->fetchAll($app);
 
 	return $app['twig']->render('clientes.twig',['clientes' =>$clientes]);
 
