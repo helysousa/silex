@@ -16,7 +16,31 @@ class ProdutoMapper
     {
         return array(
             'codigo' => $produto->getCodigo(), 'descricao'=>$produto->getDescricao(),
-            'nome' => $produto->getNome(), 'preco' => $produto->getPreco()
+            'unidade' => $produto->getUnidade(), 'preco' => $produto->getPreco()
         );
+    }
+
+    public function findById($app, $produtoId)
+    {
+        $sql = 'select * from produtos where id = ?';
+        $dados = $app['db']->fetchAssoc($sql,[$produtoId]);
+
+        return $dados;
+    }
+
+    public function findBycodigo($app, $codigo)
+    {
+        $sql = 'select * from produtos where codigo = ?';
+        $dados = $app['db']->fetchAssoc($sql,[$codigo]);
+
+        return $dados;
+    }
+
+    public function fetchAll($app) {
+
+	   	$sql = 'select * from produtos';
+        $dados= $app['db']->fetchAll($sql,[]);
+
+    	return $dados;
     }
 }

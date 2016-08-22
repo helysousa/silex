@@ -13,7 +13,7 @@ class Produto
 {
     private $codigo;
     private $descricao;
-    private $nome;
+    private $unidade;
     private $preco;
 
     /**
@@ -51,17 +51,17 @@ class Produto
     /**
      * @return mixed
      */
-    public function getNome()
+    public function getUnidade()
     {
-        return $this->nome;
+        return $this->unidade;
     }
 
     /**
-     * @param mixed $quantidade
+     * @param mixed $unidade
      */
-    public function setNome($nome)
+    public function setUnidade($unidade)
     {
-        $this->nome = $nome;
+        $this->unidade = $unidade;
     }
 
     /**

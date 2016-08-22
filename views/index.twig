@@ -1,12 +1,72 @@
-<html>
-<head>
+{% extends 'layout.twig' %}
 
-</head>
-<body>
-<ul>
-    <li><a href="/clientes">Clientes</a></li>
-    <li><a href="/produtos">Produtos</a></li>
-</ul>
+{% block contentHeader %}
+	Dashboard
+{% endblock %}
 
-</body>
-</html>
+{% block buttonHeader %}
+
+{% endblock %}
+	
+{%block conteudo %}
+
+<div class="row">
+	<div class="col-lg-3 col-md-6">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<div class="row">
+					<div class="col-xs-3">
+						<i class="fa fa-child fa-5x"> 
+						</i>
+					</div>
+					<div class="col-xs-9 text-right">
+						<div class="huge"> {{ qtdClientes }} </div>
+						<div> Clientes </div>	
+					</div>
+				</div>
+			</div>
+			<a href="{{ path('clientes') }}">
+				<div class="panel-footer">
+					<span class="pull-left"> Mais detalhes</span>
+					<span class="pull-right">
+						<i class="fa fa-arrow-circle-right"> </i>
+					</span>
+					<div class="clearfix"> </div>
+				</div>
+			</a>
+		</div>
+	</div>
+
+	<div class="col-lg-3 col-md-6">
+		<div class="panel panel-green">
+			<div class="panel-heading">
+				<div class="row">
+					<div class="col-xs-3">
+						<i class="fa fa-gift fa-5x"> 
+						</i>
+					</div>
+					<div class="col-xs-9 text-right">
+						<div class="huge"> {{ qtdProdutos }} </div>
+						<div> Produtos </div>	
+					</div>
+				</div>
+			</div>
+			<a href="{{ path('produtos') }}">
+				<div class="panel-footer">
+					<span class="pull-left"> Mais detalhes</span>
+					<span class="pull-right">
+						<i class="fa fa-arrow-circle-right"> </i>
+					</span>
+					<div class="clearfix"> </div>
+				</div>
+			</a>
+		</div>
+	</div>
+
+</div>
+
+
+ 
+
+{% endblock %}
+
