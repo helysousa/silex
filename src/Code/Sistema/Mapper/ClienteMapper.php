@@ -6,41 +6,57 @@
  * Time: 6:58 AM
  */
 
+
 namespace Code\Sistema\Mapper;
 
-use Code\Sistema\Entity\Cliente;
+use Code\Sistema\Entity\Cliente as Cliente;
+use Code\Sistema\Interfaces\IMapper as IMapper;
 
-class ClienteMapper
+class ClienteMapper implements IMapper
 {
-    public function insert(Cliente $cliente)
+
+    // mapeamento relacional => objeto
+    public function mapArrayToOneObject (array $row)
     {
-        return array(
-           'id'=>$cliente->getId(),  'nome' => $cliente->getNome(), 'email'=>$cliente->getEmail()
+        $cliente = new Cliente();
+
+        $cliente->setId($row['id']);
+        $cliente->setNome($row['nome']);
+        $cliente->setEmail($row['email']);
+
+        return $cliente;
+    }
+
+    // mapeamento array relacional => array objetos
+    /**
+     * @param array $lista
+     * @return array
+     */
+    public function mapArrayToMultipleObjects (array $lista)
+    {
+        $clientes = array();
+
+        foreach ($lista as $row)
+        {
+            $clientes[] = $this->mapArrayToOneObject($row);
+        }
+
+        return $clientes;
+    }
+
+    /**
+     * mapeamento um cliente para um array
+     * @param $instance of Cliente
+     * @return array
+     */
+    public function mapObjectToArray($instance)
+    {
+        $result = array(
+                        'id' => $instance->getId(),
+                        'nome' => $instance->getNome(),
+                        'email' => $instance->getEmail()
         );
-    }
 
-    public function fetchAll($app)
-    {
-        
-        $sql = 'select * from clientes';
-
-        $dados = $app['db']->fetchAll($sql,[]);
-
-    	return $dados;
-    }
-
-    public function getById(integer $Id) {
-
-        $clientes = $this->fetchAll();
-
-        return $clientes[$id];
-    }
-    // retorna a quantidade de clientes cadastrados
-    public function count($app)
-    {
-        $sql = 'select count(*) as qtd from clientes';
-        $qtd = $app['db']->fetchAssoc($sql,[])['qtd'];
-
-        return $qtd;
+        return $result;
     }
 }

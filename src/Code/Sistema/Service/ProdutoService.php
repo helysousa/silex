@@ -10,28 +10,33 @@ namespace Code\Sistema\Service;
 
 use Code\Sistema\Entity\Produto;
 use Code\Sistema\Mapper\ProdutoMapper;
+use Code\Sistema\Repository\ProdutoRepository;
 
 class ProdutoService
 {
 
     private $produto;
     private $produtoMapper;
+    private $produtoRepository;
+    private $app;
 
     // reduzir acoplamento entre classes
-    public function __construct(Produto $produto, ProdutoMapper $produtoMapper)
+    public function __construct($app, Produto $produto, ProdutoMapper $produtoMapper, ProdutoRepository $produtoRepository)
     {
+        $this->app = $app;
         $this->produto = $produto;
         $this->produtoMapper = $produtoMapper;
+        $this->produtoRepository = $produtoRepository;
     }
 
-    public function getById($app, $produtoId)
+    public function getById($produtoId)
     {
-        return $this->produtoMapper->findById($app, $produtoId);
+        return $this->produtoRepository->findById($produtoId);
     }
 
-    public function getByCodigo($app, $codigo)
+    public function getByCodigo($codigo)
     {
-        return $this->produtoMapper->findByCodigo($app, $codigo);
+        return $this->produtoRepository->findByCodigo($codigo);
     }
 
     public function insert (array $data)
@@ -41,17 +46,17 @@ class ProdutoService
         $this->produto->setUnidade($data['unidade']);
         $this->produto->setPreco($data['preco']);
 
-        return $this->produtoMapper->insert($this->produto);
+        return $this->produtoRepository->insert($this->produto);
 
     }
 
-    public function fetchAll($app)
+    public function fetchAll()
     {
-        return $this->produtoMapper->fetchAll($app);
+        return $this->produtoRepository->fetchAll();
     }
 
-    public function count($app) 
+    public function count()
     {
-        return $this->produtoMapper->count($app);
+        return $this->produtoRepository->count();
     }
 }

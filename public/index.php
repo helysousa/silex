@@ -10,48 +10,36 @@ use Symfony\Component\HttpFoundation\Response;
 use Code\Sistema\Service\ClienteService;
 use Code\Sistema\Entity\Cliente;
 use Code\Sistema\Mapper\ClienteMapper;
+use Code\Sistema\Repository\ClienteRepository;
 use Code\Sistema\Entity\Produto;
 use Code\Sistema\Mapper\ProdutoMapper;
 use Code\Sistema\Service\ProdutoService;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-// ====================================
-// dados para teste da rota /cliente
-// metodologia adotada: KISS
-// ====================================
-$dadosDoCliente = array('id' => 1, 'nome' => 'Mariana Silva', 'email' => 'mariana@jmail.com');
-// =====================================
-
-// ====================================
-// dados para teste da rota /produto
-// metodologia adotada: KISS
-// ====================================
-$dadosDoProduto = array('codigo' => '00001-9', 'descricao' => 'Margarina em po sem gluten', 'unidade' => 'UN', 'preco' => 3.99);
-// =====================================
-
-
-
 $response = new Response();
-
 
 // Service container
 
-$app['clienteService'] = function () {
+$app['clienteService'] = function ($app) {
 
-    return new ClienteService(new Cliente(), new clienteMapper());
+    $clienteMapper = new ClienteMapper();
+
+    return new ClienteService($app, new Cliente(), $clienteMapper, new ClienteRepository($app, $clienteMapper));
 };
 
-$app['produtoService'] = function () {
-    return new ProdutoService(new Produto(), new ProdutoMapper());
-};
+$app['produtoService'] = function ($app) {
 
+    $produtoMapper = new ProdutoMapper();
+
+    return new ProdutoService($app, new Produto(), $produtoMapper, new \Code\Sistema\Repository\ProdutoRepository($app, $produtoMapper));
+};
 
 // home
 $app->get('/', function () use ($app) {
 
-	$qtdClientes = $app['clienteService']->count($app);
-	$qtdProdutos = $app['produtoService']->count($app);;
+    $qtdClientes = $app['clienteService']->count($app);
+    $qtdProdutos = $app['produtoService']->count($app);;
 
     return $app['twig']->render('index.twig',['qtdClientes' =>	$qtdClientes, 'qtdProdutos' => $qtdProdutos]);
 
@@ -65,15 +53,15 @@ $app->get('/', function () use ($app) {
 
 $app->get('/clientes', function () use ($app) {
 
-	$clientes = $app['clienteService']->fetchAll($app);
+    $clientes = $app['clienteService']->fetchAll($app);
 
-	return $app['twig']->render('clientes.twig',['clientes' =>$clientes]);
+    return $app['twig']->render('clientes.twig',['clientes' =>$clientes]);
 
 })->bind("clientes");
 
 // Inserir clientes
 
-$app->get('/cliente', function () use ($app, $response, $dadosDoCliente) {
+$app->get('/cliente', function ($dadosDoCliente) use ($app, $response) {
 
 	$cliente = $app['clienteService']->insert($dadosDoCliente);
 
@@ -103,7 +91,7 @@ $app->get('/produtos', function () use ($app) {
 
 // Inserir produto
 
-$app->get('/produto', function () use ($app, $response, $dadosDoProduto)
+$app->get('/produto', function ($dadosDoProduto) use ($app, $response)
 {
     return $app->json($app['produtoService']->insert($dadosDoProduto));
 })->bind("IncluirProduto");
@@ -112,7 +100,7 @@ $app->get('/produto', function () use ($app, $response, $dadosDoProduto)
 
 $app->get('/produto/{codigo}', function ($codigo) use ($app) {
 
-	$produto = $app['produtoService']->getByCodigo($app,$codigo);
+	$produto = $app['produtoService']->getByCodigo($codigo);
 
 	return $app['twig']->render('produto.show.twig',['produto' => $produto]);
 })->bind("produto.show");

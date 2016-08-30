@@ -8,52 +8,59 @@
 
 namespace Code\Sistema\Mapper;
 
-use Code\Sistema\Entity\Produto;
+use Code\Sistema\Interfaces\IMapper;
 
-class ProdutoMapper
+class ProdutoMapper implements IMapper
 {
-    // insere novo produto
-    public function insert(Produto $produto)
+    /**
+     * mapeamento de um array para um array de produtos
+     * @param array $lista
+     * @return array of produtos
+     */
+    public function mapArrayToMultipleObjects(array $lista)
     {
-        return array(
-            'codigo' => $produto->getCodigo(), 'descricao'=>$produto->getDescricao(),
-            'unidade' => $produto->getUnidade(), 'preco' => $produto->getPreco()
+        $produtos = array();
+
+        foreach ($lista as $row)
+        {
+            $produtos[] = $this->mapArrayToOneObject($row);
+        }
+
+        return $produtos;
+    }
+
+    /**
+     * mapeamento de um array para um produto
+     * @param array $row
+     * @return instance of produto
+     */
+    public function mapArrayToOneObject(array $row)
+    {
+        $produto = new Produto();
+
+        $produto->setCodigo($row['codigo']);
+        $produto->setDescricao($row['descricao']);
+        $produto->setPreco($row['preco']);
+        $produto->setUnidade($row['unidade']);
+
+        return $produto;
+    }
+
+    /**
+     * mapeamento de um proeuto para um array
+     * @param $instance of produto
+     * @return array
+     */
+    public function mapObjectToArray($instance)
+    {
+        $result = array(
+            'codigo' => $instance->getCodigo(),
+            'descricao' => $instance->getDescricao(),
+            'preco' => $instance->getPreco(),
+            'unidade' => $instance->getUnidade()
         );
+
+        return $result;
     }
 
-    // busca produto pelo Id
-    public function findById($app, $produtoId)
-    {
-        $sql = 'select * from produtos where id = ?';
-        $dados = $app['db']->fetchAssoc($sql,[$produtoId]);
-
-        return $dados;
-    }
-
-    // busca produto pelo código
-    public function findBycodigo($app, $codigo)
-    {
-        $sql = 'select * from produtos where codigo = ?';
-        $dados = $app['db']->fetchAssoc($sql,[$codigo]);
-
-        return $dados;
-    }
-
-    // retorna todos os produtos cadastrados
-    public function fetchAll($app) {
-
-	   	$sql = 'select * from produtos';
-        $dados= $app['db']->fetchAll($sql,[]);
-
-    	return $dados;
-    }
-
-    // retorna a quantidade de produtos cadastrados
-    public function count($app)
-    {
-        $sql = 'select count(*) as qtd from produtos';
-        $qtd = $app['db']->fetchAssoc($sql,[])['qtd'];
-
-        return $qtd;
-    }
 }
